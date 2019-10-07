@@ -3,9 +3,26 @@ using Xunit;
 
 namespace GradeBook.Tests
 {
+
+    public delegate string WriteLogDelegate(string logMessage);
+
     public class TypeTests
     {
+        [Fact]
+        public void WriteLogDelegateCanPointToMethod()
+        {
+            WriteLogDelegate log;
 
+            log = ReturnMessage;
+
+            var result = log("Hello!");
+            Assert.Equal("Hello!", result);
+        }
+
+        string ReturnMessage(string message)
+        {
+            return message;
+        }
 
         [Fact]
         public void ValueTypesAlsoPassByValue()
@@ -33,7 +50,6 @@ namespace GradeBook.Tests
             GetBookSetName(ref book1, "New Name");
             // act
 
-
             // assert
             Assert.Equal("New Name", book1.Name);
         }
@@ -50,7 +66,6 @@ namespace GradeBook.Tests
             GetBookSetName(book1, "New Name");
             // act
 
-
             // assert
             Assert.Equal("Book 1", book1.Name);
         }
@@ -60,8 +75,6 @@ namespace GradeBook.Tests
             book.Name = name;
         }
 
-
-
         [Fact]
         public void CanSetNameFromReference()
         {
@@ -69,7 +82,6 @@ namespace GradeBook.Tests
             var book1 = GetBook("Book 1");
             SetName(book1, "New Name");
             // act
-
 
             // assert
             Assert.Equal("New Name", book1.Name);
@@ -102,7 +114,6 @@ namespace GradeBook.Tests
             var book2 = GetBook("Book 2");
             // act
 
-
             // assert
             Assert.Equal("Book 1", book1.Name);
             Assert.Equal("Book 2", book2.Name);
@@ -116,7 +127,6 @@ namespace GradeBook.Tests
             var book1 = GetBook("Book 1");
             var book2 = book1;
             // act
-
 
             // assert
             Assert.Same(book1, book2);

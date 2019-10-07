@@ -3,60 +3,70 @@ using System.Collections.Generic;
 
 namespace GradeBook
 {
+
+    public delegate void GradeAddedDelegate(object sender, EventArgs args);
+
     public class Book
     {
-        public Book (string name)
+        public Book(string name)
         {
-            grades = new List<double> ();
+            grades = new List<double>();
             Name = name;
         }
 
-        public void AddLetterGrade (char letter)
+        public void AddLetterGrade(char letter)
         {
             switch (letter)
             {
                 case 'A':
-                    AddGrade (90);
+                    AddGrade(90);
                     break;
 
                 case 'B':
-                    AddGrade (80);
+                    AddGrade(80);
                     break;
 
                 case 'C':
-                    AddGrade (70);
+                    AddGrade(70);
                     break;
 
                 default:
-                    AddGrade (0);
+                    AddGrade(0);
                     break;
             }
         }
 
-        public void AddGrade (double grade)
+        public void AddGrade(double grade)
         {
             if (grade <= 100 && grade >= 0)
             {
-                grades.Add (grade);
+                grades.Add(grade);
+                if (GradeAdded != null)
+                {
+                    GradeAdded(this, new EventArgs());
+                }
+
             }
             else
             {
-                throw new ArgumentException ($"Invalid {nameof(grade)}");
+                throw new ArgumentException($"Invalid {nameof(grade)}");
             }
 
         }
 
-        public Statistics GetStatistics ()
+        public event GradeAddedDelegate GradeAdded;
+
+        public Statistics GetStatistics()
         {
-            var result = new Statistics ();
+            var result = new Statistics();
             result.Average = 0.0;
             result.High = double.MinValue;
             result.Low = double.MaxValue;
 
             for (var index = 0; index < grades.Count; index += 1)
             {
-                result.Low = Math.Min (grades[index], result.Low);
-                result.High = Math.Max (grades[index], result.High);
+                result.Low = Math.Min(grades[index], result.Low);
+                result.High = Math.Max(grades[index], result.High);
                 result.Average += grades[index];
             }
 
@@ -88,6 +98,13 @@ namespace GradeBook
             return result;
         }
         private List<double> grades;
-        public string Name;
+
+        public string Name
+        {
+            get;
+            set;
+        }
+
+        public const string CATEGORY = "Science";
     }
 }
